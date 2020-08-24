@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Aug 23 12:24:47 2020
-
+v1.1: add the keyword augument: dev_set
 @author: lwang
 """
 
@@ -25,7 +25,7 @@ from utils import plot_loss, plot_metrics, shuffle_trainset
 from scipy.io import loadmat, savemat
 
 
-def train_subj (subj, save_dir,  N_epoch = 20, plot=1):
+def train_subj (subj, save_dir, N_epoch = 20, dev_set = 'AVG_100', plot =1):
     #%% load saved data (.mat) from MATLAB
     #subj = 's21'
     # (1)train set:
@@ -62,11 +62,17 @@ def train_subj (subj, save_dir,  N_epoch = 20, plot=1):
     #%% prepare {x_train, y_train, x_test, y_test}
     # option B: use AVG- [50, 60, 70, 80, 90] trials for train
     x_train = np.concatenate((data1[0,0],data1[0,1],data1[0,2],data1[0,3],data1[0,4]), axis=0)
-    # dev set (1):
-    #x_test_100tr = data1_dev[-1] # AVG 100 trials
-    #x_test = np.reshape(x_test_100tr, (1, x_test_100tr.shape[0], x_test_100tr.shape[1]))
-    # dev set (2):
-    x_test = data1_dev # (96, 60, 120)
+    if dev_set ==  'AVG_100':   # saved in folder named 'saved_models2'     
+        x_test_100tr = data1_dev[-1] # dev set: AVG-100 trials  (1,:,:)
+        x_test = np.reshape(x_test_100tr, (1, x_test_100tr.shape[0], x_test_100tr.shape[1]))
+    elif dev_set ==  'AVG_50_100': # saved in folder named 'mat3'               
+        # dev set: AVG 5-100 trials
+        x_test = data1_dev[-50:,:,:] # (50-100,:,:)
+    elif dev_set ==  'AVG_5_100': # whole dev set: 'AVG_5_100' - saved in folder named 'saved_models'
+        x_test = data1_dev # (5-100, :,:)        
+    
+    
+    print('dev_set: ',x_test.shape)
     
     # normalize X to [0 - 1] 
     x_train = normalize_matrix_1(x_train)
