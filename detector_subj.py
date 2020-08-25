@@ -2,6 +2,8 @@
 """
 Created on Mon Aug 24 11:07:41 2020
 made this file an API for batch_detector
+v1.1 add an augument: model_dir @8/25/2020
+V1.2 update the last figure: both pred of AVG-100 and mean of AVG-90
 @author: lwang
 """
 
@@ -16,7 +18,7 @@ from scipy.io import loadmat, savemat
 from utils import normalize_matrix_1, plot1bar
 
 
-def detector_subj (subj_train, subj_test, save_dir, plot=1):
+def detector_subj (subj_train, subj_test, model_dir, save_dir, plot=1):
        
     labels_full= [4, 6, 27, 33, 35, 37, 39, 43, 45, 66, 72, 76, 78, 99,105,111,117]
     labels_subset = [6, 33, 37, 39, 43, 66, 72, 78, 99, 117] # (1)
@@ -25,7 +27,7 @@ def detector_subj (subj_train, subj_test, save_dir, plot=1):
     
     #%% laod trainded model (.h5)
     # Re-load the model with the best validation accuracy
-    model_dir = os.path.join(os.getcwd(), 'saved_models')
+    # model_dir = os.path.join(os.getcwd(), 'saved_models')
     model_name = subj_train + '_best_trained_model.h5'
     model= keras.models.load_model(os.path.join(model_dir, model_name))
     
@@ -99,8 +101,8 @@ def detector_subj (subj_train, subj_test, save_dir, plot=1):
     if plot == 1:
         # plot probility on AVG trials = [90]
         plt.figure(figsize=(16, 9))
-        plt.plot(predictions_mean, label= 'AVG 90 trials', linestyle='--')
-            
+        plt.plot(predictions_mean, label= 'mean of 100 AVG-90 trials', linestyle='--')
+        plt.plot(prediction_on_1AVG, label= 'AVG-100 trials', linestyle='--')    
         plot1bar(labels2plt, L=2)
         plt.grid(True)
         plt.xlabel('frequency (Hz)')

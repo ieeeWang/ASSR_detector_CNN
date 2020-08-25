@@ -53,7 +53,7 @@ def train_subj (subj, save_dir, N_epoch = 20, dev_set = 'AVG_100', plot =1):
     labels_subset3= [6, 33, 35, 37, 39, 43, 45, 66, 72, 76, 78, 99, 117] # (3)
     
     # choose one annotation from above !
-    labels_2use = labels_subset
+    labels_2use = labels_full
 
     labels_org = np.array(labels_2use)-1 # python starts from 0
     labels_bi = xloc2binaryvec(labels_org) # binary code label: 1 and 0  
